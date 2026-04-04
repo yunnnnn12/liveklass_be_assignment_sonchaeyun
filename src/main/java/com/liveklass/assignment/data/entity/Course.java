@@ -35,5 +35,9 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private CourseStatus classStatus;
 
+    public void increaseCurrentCount() {
+        this.currentCount++;
+    }
+
 
 }
