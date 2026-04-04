@@ -1,6 +1,6 @@
 package com.liveklass.assignment.data.entity;
 
-import com.liveklass.assignment.data.ClassStatus;
+import com.liveklass.assignment.data.CourseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class Course {
 
     private int maxCapacity;
 
-    // private int currentCount;
+    private int currentCount;
 
     private Long price;
 
@@ -33,7 +33,7 @@ public class Course {
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    private ClassStatus classStatus;
+    private CourseStatus classStatus;
 
 
 }
