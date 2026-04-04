@@ -17,13 +17,12 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 수강생, 강의
-    // 1. 수강생
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classmate_id")
     private Classmate classmate;
 
-    // 2. 강의
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
@@ -32,5 +31,10 @@ public class Enrollment {
     private EnrollmentStatus enrollmentStatus;
 
     private LocalDateTime enrolledDate;
+
+    public void changeStatus(EnrollmentStatus newStatus){
+        this.enrollmentStatus = newStatus;
+
+    }
 
 }
