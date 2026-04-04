@@ -2,12 +2,15 @@ package com.liveklass.assignment.data.entity;
 
 import com.liveklass.assignment.data.EnrollmentStatus;
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Enrollment {
 
     @Id
