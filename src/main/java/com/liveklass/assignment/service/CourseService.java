@@ -35,7 +35,7 @@ public class CourseService {
         return courseRepository.save(course).getId();
     }
 
-    // 강의 목록 조회 (여러개) - 상태값이 null이 아닌 강의 목록
+    // 강의 목록 조회(상태에 따른)
     public List<CourseResponse> getCourses(CourseStatus status) {
         List<Course> courses;
 
