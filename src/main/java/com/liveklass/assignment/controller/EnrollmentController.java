@@ -34,4 +34,12 @@ public class EnrollmentController {
     public ResponseEntity<List<EnrollmentResponse>> getMyEnrollments(@RequestParam(name = "userId") Long userId) {
         return ResponseEntity.ok(enrollmentService.getMyEnrollments(userId));
     }
+
+    // 4. 수강 취소
+    @PatchMapping("/{enrollmentId}/cancel")
+    public ResponseEntity<Void> cancel(@PathVariable Long enrollmentId) {
+        enrollmentService.cancelEnrollment(enrollmentId);
+
+        return ResponseEntity.ok().build();
+    }
 }
