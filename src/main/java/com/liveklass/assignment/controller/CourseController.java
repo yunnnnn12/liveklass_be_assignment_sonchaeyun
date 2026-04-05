@@ -34,4 +34,18 @@ public class CourseController {
     public ResponseEntity<CourseResponse> getCourseDetail(@PathVariable(name = "courseId") Long courseId) {
         return ResponseEntity.ok(courseService.getCourseDetail(courseId));
     }
+
+    // 4. 강의 OPEN
+    @PatchMapping("/{courseId}/open")
+    public ResponseEntity<Void> openCourse(@PathVariable(name = "courseId") Long courseId) {
+        courseService.openCourse(courseId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 5. 강의 CLOSED
+    @PatchMapping("/{courseId}/close")
+    public ResponseEntity<Void> closeCourse(@PathVariable Long courseId) {
+        courseService.closeCourse(courseId);
+        return ResponseEntity.ok().build();
+    }
 }
