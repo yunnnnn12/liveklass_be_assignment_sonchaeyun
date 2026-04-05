@@ -57,4 +57,20 @@ public class CourseService {
 
         return CourseResponse.from(course);
     }
+
+    @Transactional
+    public void openCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+
+        course.open();
+    }
+
+    @Transactional
+    public void closeCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+
+        course.close();
+    }
 }
