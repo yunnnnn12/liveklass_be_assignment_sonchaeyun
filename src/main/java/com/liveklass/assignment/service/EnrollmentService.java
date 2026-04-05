@@ -69,4 +69,21 @@ public class EnrollmentService {
                 .map(EnrollmentResponse::from) // DTO로 변환
                 .toList();
     }
+
+    // 4. 수강 신청 취소
+    @Transactional
+    public void cancelEnrollment(Long enrollmentId) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 수강 신청 내역을 찾을 수 없습니다."));
+
+        if (enrollment.getEnrollmentStatus() == EnrollmentStatus.CANCELLED) {
+            throw new IllegalStateException("이미 취소된 수강 신청입니다.");
+        }
+
+        if (enrollment.getEnrollmentStatus() == EnrollmentStatus.CONFIRMED) {
+            enrollment.getCourse().decreaseCurrentCount();
+        }
+
+        enrollment.changeStatus(EnrollmentStatus.CANCELLED);
+    }
 }
