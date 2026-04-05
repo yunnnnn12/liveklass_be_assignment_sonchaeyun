@@ -36,8 +36,14 @@ public class Course {
     private CourseStatus classStatus;
 
     public void increaseCurrentCount() {
-        this.currentCount++;
+        if (this.currentCount < this.maxCapacity) {
+            this.currentCount++;
+        }
     }
 
-
+    public void decreaseCurrentCount() {
+        if (this.currentCount > 0) {
+            this.currentCount--;
+        }
+    }
 }
