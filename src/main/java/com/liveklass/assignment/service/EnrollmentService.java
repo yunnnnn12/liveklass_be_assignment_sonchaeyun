@@ -1,6 +1,5 @@
 package com.liveklass.assignment.service;
 
-import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.EnrollmentStatus;
 import com.liveklass.assignment.data.entity.Classmate;
 import com.liveklass.assignment.data.entity.Course;
@@ -24,18 +23,15 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final ClassmateRepository classmateRepository;
 
-    // 1. 수강 신청
+    // 1. 수강 신청 (단순 예약: PENDING)
     @Transactional
     public Long enroll(Long courseId, String userName) {
-
-        // 강의 조회
+        // 강의 조회 (락 없이 일반 조회)
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
 
-        if (course.getClassStatus() != CourseStatus.OPEN) {
-            throw new IllegalStateException("현재 수강 신청 가능한 상태가 아닙니다. (강의 상태: " + course.getClassStatus() + ")");
-        }
 
+        course.validateAvailable(); // 강의 상태, 강의 기간, 정원 체크
 
         Classmate classmate = classmateRepository.save(
                 Classmate.builder()
@@ -50,23 +46,29 @@ public class EnrollmentService {
                 .enrolledDate(LocalDateTime.now())
                 .build();
 
-        return enrollmentRepository.save(enrollment).getId();
+        return enrollmentRepository.save(enrollment).getId(); // 수강 id 반환
     }
 
-    // 2. 결제 확정 처리
+    // 2. 결제 확정 처리 (실제 인원 증가, CONFIRMED으로 변환)
     @Transactional
     public void confirmEnrollment(Long enrollmentId) {
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new IllegalArgumentException("신청 내역이 없습니다."));
 
+        Course course = courseRepository.findByIdWithLock(enrollment.getCourse().getId()) // 락 대기
+                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+
+        // 결제 상태 변경
         enrollment.changeStatus(EnrollmentStatus.CONFIRMED);
 
-        enrollment.getCourse().increaseCurrentCount(); // 강의 인원 증가
+        // 엔티티 내부에서 인원 증가 + 기간/정원 재검증
+        course.increaseCurrentCount();
     }
 
     // 3. 내 수강 신청 목록 조회
     public List<EnrollmentResponse> getMyEnrollments(Long userId) {
         return enrollmentRepository.findAllByClassmate_Id(userId).stream()
-                .map(EnrollmentResponse::from) // DTO로 변환
+                .map(EnrollmentResponse::from)
                 .toList();
     }
 
@@ -80,6 +82,7 @@ public class EnrollmentService {
             throw new IllegalStateException("이미 취소된 수강 신청입니다.");
         }
 
+        // 이미 결제까지 된 상태였다면 강의 인원을 다시 한 명 비움
         if (enrollment.getEnrollmentStatus() == EnrollmentStatus.CONFIRMED) {
             enrollment.getCourse().decreaseCurrentCount();
         }
