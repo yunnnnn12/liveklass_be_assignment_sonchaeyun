@@ -1,9 +1,12 @@
 package com.liveklass.assignment.service;
 
+import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.EnrollmentStatus;
+import com.liveklass.assignment.data.entity.Classmate;
 import com.liveklass.assignment.data.entity.Course;
 import com.liveklass.assignment.data.entity.Enrollment;
 import com.liveklass.assignment.dto.EnrollmentResponse;
+import com.liveklass.assignment.repository.ClassmateRepository;
 import com.liveklass.assignment.repository.CourseRepository;
 import com.liveklass.assignment.repository.EnrollmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +22,30 @@ import java.util.List;
 public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final CourseRepository courseRepository;
+    private final ClassmateRepository classmateRepository;
 
     // 1. 수강 신청
     @Transactional
-    public Long enroll(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의입니다."));
+    public Long enroll(Long courseId, String userName) {
 
-        if (course.getCurrentCount() >= course.getMaxCapacity()) {
-            throw new IllegalStateException("수강 정원이 초과되었습니다. (정원: " + course.getMaxCapacity() + ")");
+        // 강의 조회
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+
+        if (course.getClassStatus() != CourseStatus.OPEN) {
+            throw new IllegalStateException("현재 수강 신청 가능한 상태가 아닙니다. (강의 상태: " + course.getClassStatus() + ")");
         }
 
 
+        Classmate classmate = classmateRepository.save(
+                Classmate.builder()
+                        .name(userName)
+                        .build()
+        );
+
         Enrollment enrollment = Enrollment.builder()
                 .course(course)
+                .classmate(classmate)
                 .enrollmentStatus(EnrollmentStatus.PENDING)
                 .enrolledDate(LocalDateTime.now())
                 .build();
@@ -47,12 +60,12 @@ public class EnrollmentService {
 
         enrollment.changeStatus(EnrollmentStatus.CONFIRMED);
 
-        enrollment.getCourse().increaseCurrentCount();
+        enrollment.getCourse().increaseCurrentCount(); // 강의 인원 증가
     }
 
     // 3. 내 수강 신청 목록 조회
     public List<EnrollmentResponse> getMyEnrollments(Long userId) {
-        return enrollmentRepository.findAllByUserId(userId).stream()
+        return enrollmentRepository.findAllByClassmate_Id(userId).stream()
                 .map(EnrollmentResponse::from) // DTO로 변환
                 .toList();
     }
