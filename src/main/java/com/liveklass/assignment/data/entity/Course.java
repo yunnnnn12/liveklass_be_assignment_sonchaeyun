@@ -19,7 +19,7 @@ public class Course {
     // 1. 기본 정보
     private String title;
     private String description;
-    private Long price;
+    private int price;
 
     // 2. 인원 관련
     private int maxCapacity;
