@@ -20,7 +20,7 @@ public class CourseCreateValidator {
         }
 
         // 3. 가격 검증
-        if (request.price() == null || request.price() < 0) {
+        if (request.price() < 0) {
             throw new IllegalArgumentException("[ERROR] 가격은 0원 이상이어야 합니다.");
         }
 
