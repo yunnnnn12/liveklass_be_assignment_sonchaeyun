@@ -1,12 +1,17 @@
 package com.liveklass.assignment.repository;
 
+import com.liveklass.assignment.data.EnrollmentStatus;
 import com.liveklass.assignment.data.entity.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
-    List<Enrollment> findAllByClassmate_Id(Long classmateId);
+    // [수강생] 내 신청 내역 페이징 조회
+    Page<Enrollment> findAllByClassmate_Id(Long classmateId, Pageable pageable);
+
+    // [크리에이터] 특정 강의의 확정된 수강생 목록 페이징 조회
+    Page<Enrollment> findAllByCourse_IdAndEnrollmentStatus(Long courseId, EnrollmentStatus status, Pageable pageable);
 }
