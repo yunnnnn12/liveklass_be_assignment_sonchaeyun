@@ -4,6 +4,7 @@ import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.dto.CourseCreateRequest;
 import com.liveklass.assignment.dto.CourseResponse;
 import com.liveklass.assignment.service.CourseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class CourseController {
 
     // 1. 강의 개설
     @PostMapping
-    public ResponseEntity<Long> createCourse(@RequestBody CourseCreateRequest request) {
+    public ResponseEntity<Long> createCourse(@Valid @RequestBody CourseCreateRequest request) {
         return ResponseEntity.ok(courseService.createCourse(request));
     }
 
@@ -44,7 +45,7 @@ public class CourseController {
 
     // 5. 강의 CLOSED
     @PatchMapping("/{courseId}/close")
-    public ResponseEntity<Void> closeCourse(@PathVariable Long courseId) {
+    public ResponseEntity<Void> closeCourse(@PathVariable(name = "courseId") Long courseId) {
         courseService.closeCourse(courseId);
         return ResponseEntity.ok().build();
     }
