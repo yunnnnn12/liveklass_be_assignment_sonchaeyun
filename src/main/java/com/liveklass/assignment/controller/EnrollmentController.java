@@ -22,7 +22,7 @@ public class EnrollmentController {
         return enrollmentService.enroll(request.getCourseId(), request.getUserName());
     }
 
-    // 2. 결제 확정 (상태 변경)
+    // 2. 결제 확정 (상태 변경) - 신청 후 결제가 완료되어야 수강 확정
     @PatchMapping("/{enrollmentId}/confirm")
     public ResponseEntity<Void> confirmEnrollment(@PathVariable(name = "enrollmentId") Long enrollmentId) {
         enrollmentService.confirmEnrollment(enrollmentId);
@@ -30,6 +30,7 @@ public class EnrollmentController {
     }
 
     // 3. 내 수강 신청 목록 조회
+    // 수강생 기준
     @GetMapping("/me")
     public ResponseEntity<List<EnrollmentResponse>> getMyEnrollments(@RequestParam(name = "userId") Long userId) {
         return ResponseEntity.ok(enrollmentService.getMyEnrollments(userId));
@@ -37,7 +38,7 @@ public class EnrollmentController {
 
     // 4. 수강 취소
     @PatchMapping("/{enrollmentId}/cancel")
-    public ResponseEntity<Void> cancel(@PathVariable Long enrollmentId) {
+    public ResponseEntity<Void> cancel(@PathVariable(name = "enrollmentId") Long enrollmentId) {
         enrollmentService.cancelEnrollment(enrollmentId);
 
         return ResponseEntity.ok().build();
