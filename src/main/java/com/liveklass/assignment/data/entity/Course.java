@@ -1,10 +1,9 @@
 package com.liveklass.assignment.data.entity;
 
 import com.liveklass.assignment.data.CourseStatus;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -12,18 +11,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 1. 기본 정보
     private String title;
+    private String description;
+    private Long price;
+
+    // 2. 인원 관련
     private int maxCapacity;
     private int currentCount;
 
-    private String description;
-
-    private Long price;
-
+    // 3. 날짜 및 상태
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
@@ -33,10 +35,13 @@ public class Course {
 
     public void open() {
         if (this.startDate == null || this.endDate == null) {
-            throw new IllegalStateException("강의 기간이 설정되지 않아 오픈할 수 없습니다.");
+            throw new IllegalStateException("강의 기간이 설정되지 않았습니다.");
         }
-        if (this.startDate.isAfter(this.endDate)) {
-            throw new IllegalArgumentException("시작일은 종료일보다 빨라야 합니다.");
+        if (LocalDateTime.now().isAfter(this.startDate)) {
+            throw new IllegalStateException("강의 시작일이 지난 강의는 오픈할 수 없습니다.");
+        }
+        if (this.currentCount >= this.maxCapacity) {
+            throw new IllegalStateException("정원이 가득 차서 오픈할 수 없습니다.");
         }
         this.classStatus = CourseStatus.OPEN;
     }
@@ -44,7 +49,6 @@ public class Course {
     public void close() {
         this.classStatus = CourseStatus.CLOSED;
     }
-
 
     public void validateAvailable() {
         // 상태 체크
@@ -64,7 +68,7 @@ public class Course {
     }
 
     public void increaseCurrentCount() {
-        validateAvailable();
+        validateAvailable(); // 동시에 신청하는 것 위해 재검증
         this.currentCount++;
     }
 
