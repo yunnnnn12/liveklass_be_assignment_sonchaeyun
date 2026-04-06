@@ -6,7 +6,7 @@ import com.liveklass.assignment.data.entity.Course;
 public record CourseResponse(
         Long id,
         String title,
-        Long price,
+        int price,
         Integer maxCapacity,
         Integer currentCount,
         CourseStatus status
