@@ -8,10 +8,9 @@ import com.liveklass.assignment.dto.EnrollmentResponse;
 import com.liveklass.assignment.repository.ClassmateRepository;
 import com.liveklass.assignment.repository.CourseRepository;
 import com.liveklass.assignment.repository.EnrollmentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,17 +18,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EnrollmentService {
+
     private final EnrollmentRepository enrollmentRepository;
     private final CourseRepository courseRepository;
     private final ClassmateRepository classmateRepository;
 
-    // 1. 수강 신청 (단순 예약: PENDING)
+    // 수강 신청
     @Transactional
     public Long enroll(Long courseId, String userName) {
         // 강의 조회 (락 없이 일반 조회)
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
-
 
         course.validateAvailable(); // 강의 상태, 강의 기간, 정원 체크
 
@@ -42,14 +41,14 @@ public class EnrollmentService {
         Enrollment enrollment = Enrollment.builder()
                 .course(course)
                 .classmate(classmate)
-                .enrollmentStatus(EnrollmentStatus.PENDING)
+                .enrollmentStatus(EnrollmentStatus.PENDING) // 초기에는 pending
                 .enrolledDate(LocalDateTime.now())
                 .build();
 
-        return enrollmentRepository.save(enrollment).getId(); // 수강 id 반환
+        return enrollmentRepository.save(enrollment).getId();
     }
 
-    // 2. 결제 확정 처리 (실제 인원 증가, CONFIRMED으로 변환)
+    // 2. 결제 확정 처리
     @Transactional
     public void confirmEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
@@ -61,7 +60,7 @@ public class EnrollmentService {
         // 결제 상태 변경
         enrollment.changeStatus(EnrollmentStatus.CONFIRMED);
 
-        // 엔티티 내부에서 인원 증가 + 기간/정원 재검증
+        // 실제 인원 증가
         course.increaseCurrentCount();
     }
 
