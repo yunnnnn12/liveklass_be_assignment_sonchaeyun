@@ -34,22 +34,22 @@
 - PATCH /api/courses/{id}/close: 강의 상태 CLOSE 변경
 
 ### 2. 수강 신청 관련
-- POST /api/enrollments/enroll: 수강 신청 (Body: courseId, userName)
-- GET /api/enrollments/me?userId={id}&page={page}&size={size}: 내 수강 신청 목록 조회 (Pageable 지원)
-- GET /api/enrollments/course/{courseId}/students?page={page}&size={size}: 특정 강의 수강생 목록 조회 (크리에이터용, 페이징) 
-- PATCH /api/enrollments/{enrollmentId}/confirm: 수강 신청 승인
-- PATCH /api/enrollments/{enrollmentId}/cancel: 수강 신청 취소 (7일 제한 로직 포함)
+- **POST /api/enrollments/enroll**: 수강 신청 (Body: courseId, userName)
+- **GET /api/enrollments/me?userId={id}&page={page}&size={size}**: 내 수강 신청 목록 조회 (Pageable 지원)
+- **GET /api/enrollments/course/{courseId}/students?page={page}&size={size}**: 특정 강의 수강생 목록 조회 (크리에이터용, 페이징) 
+- **PATCH /api/enrollments/{enrollmentId}/confirm**: 수강 신청 승인
+- **PATCH /api/enrollments/{enrollmentId}/cancel**: 수강 신청 취소 (7일 제한 로직 포함)
 
 ## 5. API 명세
-Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:  
+Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
 [Swagger UI](http://localhost:8080/swagger-ui/index.html)
 
 
 ## 6. 데이터 모델 설명
-1. Course: 강의 정보를 담으며 currentCount로 실시간 인원 관리
-2. Enrollment: 수강 신청 내역을 관리하며 신청 상태와 확정 일시 저장
-3. Classmate: 수강생 정보를 관리하며 중복 가입 방지
-4. Waitlist: 정원 초과 시 신청한 사용자를 순차적으로 기록
+1. **Course**: 강의 정보를 담으며 currentCount로 실시간 인원 관리
+2. **Enrollment**: 수강 신청 내역을 관리하며 신청 상태와 확정 일시 저장
+3. **Classmate**: 수강생 정보를 관리하며 중복 가입 방지
+4. **Waitlist**: 정원 초과 시 신청한 사용자를 순차적으로 기록
 
 
 ## 7. DB 스키마 / ERD 설명
@@ -91,16 +91,15 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
 - **관계**
   - N:1 Course
 
-### 관계 요약
+### 5. 관계 요약
 - Classmate 1:N Enrollment : 한 수강생은 여러 강의를 신청할 수 있음
 - Course 1:N Enrollment : 한 강의에 여러 수강 신청 가능
 - Course 1:N Waitlist : 정원 초과 시 대기자 관리
 - ERD 그림으로 표현하면 다음과 같이 연결됨
 
 
-
 ## 8. 요구사항 해석 및 가정 + 설계 결정과 이유
-1. 강의 개설
+### 1. 강의 개설
 - Course 엔티티와 DTO 기반 설계
   - 해석 및 가정 : 강사가 강의 제목, 설명 등 정보를 DTO로 요청하면 강의 엔티티 생성 후 DB에 저장
   - 이유 : 데이터 전달 구조 명확히 하여 유지보수 향상
@@ -112,7 +111,7 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
   - 해석 및 가정 : 강의 오픈 조건 미충족 시 Course 엔티티에서 예외 발생하도록 구현
   - 이유 : 컨트롤러와 서비스 로직 최소화와 정확한 상태 관리를 위해 엔티티에 예외 로직 구현
 
-2. 수강 신청
+### 2. 수강 신청
 - Enrollment 엔티티를 별도로 구현
   - 해석 및 가정 : Course와 Classmate간 맵핑 관계를 포함하여 구현
   - 이유 : 강의, 수강생, 수강신청 정보 관리 용이 위해
@@ -121,7 +120,7 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
 - 목록 조회 시 Page 처리
   - 이유 : 대량 데이터 조회 시 한눈에 보기 쉽도록 구현
 
-3. 동시성 처리
+### 3. 동시성 처리
 - 강의 조회 시 락(lock) 처리
   - 해석 및 가정 : 수강 신청과 결제 확정 처리 시 강의를 조회할 때 락 처리
   - 이유 : 동시에 여러 사용자가 신청할 경우 발생할 수 있는 데이터 불일치 예방
@@ -129,22 +128,23 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
   - 이유 : 정확한 상태 관리를 위해 엔티티에 예외 로직 구현
 
 ## 9. 테스트 실행 방법
-- ./gradlew test
+- 테스트 실행 : ./gradlew test
 
 ## 10. 미구현/제약 사항
-1. 인증/인가 최소화
+### 1. 인증/인가 최소화
 - userId를 헤더 또는 파라미터로 전달하여 인증/인가를 간단히 처리
 - JWT 등 실제 인증 로직은 구현하지 않음
 
-2. 실제 결제 연동 미구현
+### 2. 실제 결제 연동 미구현
 - 결제 확정은 단순 confirm 메서드 호출로 처리
 
-3. 프론트엔드 미연동
+### 3. 프론트엔드 미연동
 - API 테스트는 Postman 등으로 확인 가능, 실제 UI는 구현하지 않음
 
 ## 11. AI 활용 범위
-- 과제 기능 사항을 처음 분석할 때 AI(ChatGPT 등)를 활용하여 명사, 동사, DTO 등 설계 요소를 어떻게 나눌지 기준을 참고
-- AI가 제안한 로직과 설계 아이디어를 바탕으로 본인이 직접 코드 비교, 수정, 검증
-- Spring Boot와 JPA 기반 코드 구조, 테스트 코드 작성 방법 등 예시를 확인
+1. 과제 기능 사항을 처음 분석할 때 AI(ChatGPT, Gemini)를 활용하여 명사, 동사, DTO 등 설계 요소를 어떻게 나눌지 기준을 참고하여 구현
+2. AI(ChatGPT, Gemini)를 참고하여 객체지향적 코드 작성(OOP 설계 원칙, 엔티티 역할 분리 등) 기준을 고민하며 구현
+3. Spring Boot와 JPA 기반 코드 구조, 테스트 코드 작성 방법 등 예시를 참고하여 코드 구현
+4. 동시성 환경에서의 정원 초과 문제를 해결하기 위해 AI를 이용하여 '비관적 락(Pessimistic Lock)'의 개념을 이해하고, 이를 실제 코드와 테스트 로그를 통해 직접 검증
 
 
