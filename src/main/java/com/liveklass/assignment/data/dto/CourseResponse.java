@@ -1,4 +1,4 @@
-package com.liveklass.assignment.dto;
+package com.liveklass.assignment.data.dto;
 
 import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.entity.Course;
@@ -6,7 +6,7 @@ import com.liveklass.assignment.data.entity.Course;
 public record CourseResponse(
         Long id,
         String title,
-        int price,
+        Integer price,
         Integer maxCapacity,
         Integer currentCount,
         CourseStatus status
