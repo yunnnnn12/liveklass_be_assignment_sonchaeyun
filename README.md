@@ -11,12 +11,20 @@
 
 
 ## 2. 기술 스택
-- **Language**: Java
-- **Framework**: Spring Boot
-- **ORM**: JPA (Hibernate)
-- **DB**: H2
-- **Test**: JUnit5, AssertJ
-- **기타**: Spring Data JPA, Lombok
+### Backend
+- **Language**: Java 17
+- **Framework**: Spring Boot 3.3.4
+- **ORM**: Spring Data JPA (Hibernate)
+- **Database**: H2 (In-memory)
+- **API Docs**: Swagger 
+
+### Test
+- **Framework**: JUnit5
+- **Library**: AssertJ 
+
+### Tools & Etc
+- **Build Tool**: Gradle
+- **Library**: Lombok
 
 ## 3. 실행 방법
 1. **프로젝트 클론** : git clone https://github.com/yunnnnn12/liveklass_be_assignment_sonchaeyun.git
@@ -128,8 +136,10 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
   - 이유 : 정확한 상태 관리를 위해 엔티티에 예외 로직 구현
 
 ## 9. 테스트 실행 방법
-- 터미널(또는 CMD)에서 프로젝트 루트 폴더로 이동한 후 아래 명령어 입력
-- ./gradlew test
+### 1. 테스트 실행
+- 터미널(또는 CMD)에서 프로젝트 루트 폴더로 이동한 후 다음 명령어 입력(./gradlew test)
+### 2. 테스트 결과 
+- 경로 : `build/reports/tests/test/index.html`
 
 ## 10. 미구현/제약 사항
 ### 1. 인증/인가 최소화
