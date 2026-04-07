@@ -1,7 +1,7 @@
 package com.liveklass.assignment.controller;
 
-import com.liveklass.assignment.dto.EnrollmentRequest;
-import com.liveklass.assignment.dto.EnrollmentResponse;
+import com.liveklass.assignment.data.dto.EnrollmentRequest;
+import com.liveklass.assignment.data.dto.EnrollmentResponse;
 import com.liveklass.assignment.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class EnrollmentController {
     public ResponseEntity<String> enroll(@RequestBody EnrollmentRequest request) {
         try {
             Long id = enrollmentService.enroll(request.getCourseId(), request.getUserName());
-            return ResponseEntity.ok("신청 성공 ID: " + id);
+            return ResponseEntity.ok("OK");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(e.getMessage());
         }
