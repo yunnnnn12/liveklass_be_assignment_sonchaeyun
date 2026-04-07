@@ -3,8 +3,11 @@ package com.liveklass.assignment.ServiceTest;
 import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.EnrollmentStatus;
 import com.liveklass.assignment.data.entity.*;
-import com.liveklass.assignment.dto.EnrollmentResponse;
-import com.liveklass.assignment.repository.*;
+import com.liveklass.assignment.data.dto.EnrollmentResponse;
+import com.liveklass.assignment.data.repository.ClassmateRepository;
+import com.liveklass.assignment.data.repository.CourseRepository;
+import com.liveklass.assignment.data.repository.EnrollmentRepository;
+import com.liveklass.assignment.data.repository.WaitlistRepository;
 import com.liveklass.assignment.service.CourseService;
 import com.liveklass.assignment.service.EnrollmentService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
-class EnrollmentServiceTest {
+class EnrollmentTest {
 
     @Autowired private EnrollmentService enrollmentService;
     @Autowired private CourseService courseService;
