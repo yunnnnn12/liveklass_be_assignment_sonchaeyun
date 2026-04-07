@@ -137,7 +137,8 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
 
 ## 9. 테스트 실행 방법
 ### 1. 테스트 실행
-- 터미널(또는 CMD)에서 프로젝트 루트 폴더로 이동한 후 다음 명령어 입력(./gradlew test)
+- 터미널(또는 CMD)에서 프로젝트 루트 폴더로 이동한 후 다음 명령어 입력
+  - `./gradlew test`
 ### 2. 테스트 결과 
 - 경로 : `build/reports/tests/test/index.html`
 
