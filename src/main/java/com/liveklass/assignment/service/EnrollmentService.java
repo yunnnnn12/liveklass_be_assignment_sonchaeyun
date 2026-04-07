@@ -5,11 +5,11 @@ import com.liveklass.assignment.data.entity.Classmate;
 import com.liveklass.assignment.data.entity.Course;
 import com.liveklass.assignment.data.entity.Enrollment;
 import com.liveklass.assignment.data.entity.Waitlist;
-import com.liveklass.assignment.dto.EnrollmentResponse;
-import com.liveklass.assignment.repository.ClassmateRepository;
-import com.liveklass.assignment.repository.CourseRepository;
-import com.liveklass.assignment.repository.EnrollmentRepository;
-import com.liveklass.assignment.repository.WaitlistRepository;
+import com.liveklass.assignment.data.dto.EnrollmentResponse;
+import com.liveklass.assignment.data.repository.ClassmateRepository;
+import com.liveklass.assignment.data.repository.CourseRepository;
+import com.liveklass.assignment.data.repository.EnrollmentRepository;
+import com.liveklass.assignment.data.repository.WaitlistRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,8 +31,9 @@ public class EnrollmentService {
     // 수강 신청
     @Transactional
     public Long enroll(Long courseId, String userName) {
-        // 강의 조회 (락 없이 일반 조회)
-        Course course = courseRepository.findById(courseId)
+
+        // 강의 조회
+        Course course = courseRepository.findByIdWithLock(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
 
         // 대기열 체크: 정원이 가득 찼다면 대기열 저장 후 안내
@@ -44,11 +45,10 @@ public class EnrollmentService {
 
         course.validateAvailable(); // 강의 상태, 강의 기간, 정원 체크
 
-        Classmate classmate = classmateRepository.save(
-                Classmate.builder()
-                        .name(userName)
-                        .build()
-        );
+        Classmate classmate = classmateRepository.findByName(userName)
+                .orElseGet(() -> classmateRepository.save(
+                        Classmate.builder().name(userName).build()
+                ));
 
         Enrollment enrollment = Enrollment.builder()
                 .course(course)
@@ -63,14 +63,19 @@ public class EnrollmentService {
     // 2. 결제 확정 처리
     @Transactional
     public void confirmEnrollment(Long enrollmentId) {
+
+        // 1. enrollment 조회
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new IllegalArgumentException("신청 내역이 없습니다."));
 
-        Course course = courseRepository.findByIdWithLock(enrollment.getCourse().getId()) // 락 대기
+        // 2. course 락 조회 (핵심 ⭐)
+        Course course = courseRepository.findByIdWithLock(enrollment.getCourse().getId())
                 .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
 
-        // [변경] 엔티티 내부에서 상태 변경과 시간 기록을 동시에 처리
+        // 3. 상태 변경 (엔티티가 검증)
         enrollment.confirm();
+
+        // 4. 정원 증가 (여기서 다시 체크됨)
         course.increaseCurrentCount();
     }
 
@@ -92,22 +97,13 @@ public class EnrollmentService {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 수강 신청 내역을 찾을 수 없습니다."));
 
-        // 이미 취소된 상태인지 체크
-        if (enrollment.getEnrollmentStatus() == EnrollmentStatus.CANCELED) { // 철자 주의: CANCELED -> CANCELLED (Enum 확인)
-            throw new IllegalStateException("[ERROR] 이미 취소된 수강 신청입니다.");
-        }
+        boolean wasConfirmed = enrollment.getEnrollmentStatus() == EnrollmentStatus.CONFIRMED;
 
-        // 7일 이내 취소 제한 체크
-        if (enrollment.getEnrollmentStatus() == EnrollmentStatus.CONFIRMED) {
-            if (enrollment.getConfirmedAt() != null &&
-                    enrollment.getConfirmedAt().isBefore(LocalDateTime.now().minusDays(7))) {
-                throw new IllegalStateException("결제 확정 후 7일이 경과하여 취소가 불가능합니다.");
-            }
+        enrollment.cancel();
+
+        if (wasConfirmed) {
             enrollment.getCourse().decreaseCurrentCount();
         }
-
-        // 엔티티 내부 메서드 호출
-        enrollment.cancel();
     }
 
 }
