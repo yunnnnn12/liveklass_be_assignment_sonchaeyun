@@ -10,19 +10,19 @@
 
 
 ## 2. 기술 스택
-- Language: Java
-- Framework: Spring Boot
-- ORM: JPA (Hibernate)
-- DB: H2
-- Test: JUnit5, AssertJ
-- 기타: Spring Data JPA, Lombok
+- **Language**: Java
+- **Framework**: Spring Boot
+- **ORM**: JPA (Hibernate)
+- **DB**: H2
+- **Test**: JUnit5, AssertJ
+- **기타**: Spring Data JPA, Lombok
 
 ## 3. 실행 방법
-1. 프로젝트 클론 : git clone https://github.com/yunnnnn12/liveklass_be_assignment_sonchaeyun.git
-2. 빌드 : ./gradlew clean build
-3. 실행 : ./gradlew bootRun 또는 IDE(IntelliJ 등)에서 Application 실행
-4. H2 Console: http://localhost:8080/h2-console (JDBC URL: jdbc:h2:mem:testdb)
-5. 접속 : http://localhost:8080
+1. **프로젝트 클론** : git clone https://github.com/yunnnnn12/liveklass_be_assignment_sonchaeyun.git
+2. **빌드** : ./gradlew clean build
+3. **실행** : ./gradlew bootRun 또는 IDE(IntelliJ 등)에서 Application 실행
+4. **H2 Console** : http://localhost:8080/h2-console (JDBC URL: jdbc:h2:mem:testdb)
+5. **접속** : http://localhost:8080
 
 
 ## 4. API 목록 및 예시
@@ -92,10 +92,9 @@ Swagger UI에서 전체 API 명세 및 요청/응답 예시 확인 가능:
   - N:1 Course
 
 ### 5. 관계 요약
-- Classmate 1:N Enrollment : 한 수강생은 여러 강의를 신청할 수 있음
-- Course 1:N Enrollment : 한 강의에 여러 수강 신청 가능
-- Course 1:N Waitlist : 정원 초과 시 대기자 관리
-- ERD 그림으로 표현하면 다음과 같이 연결됨
+- **Classmate 1:N Enrollment** : 한 수강생은 여러 강의를 신청할 수 있음
+- **Course 1:N Enrollment** : 한 강의에 여러 수강 신청 가능
+- **Course 1:N Waitlist** : 정원 초과 시 대기자 관리
 
 
 ## 8. 요구사항 해석 및 가정 + 설계 결정과 이유
