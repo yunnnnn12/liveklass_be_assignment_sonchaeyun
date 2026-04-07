@@ -120,7 +120,7 @@ class EnrollmentTest {
         }
 
         PageRequest pageRequest = PageRequest.of(0, 5);
-        Page<EnrollmentResponse> result = enrollmentService.getMyEnrollments(classmate.getId(), pageRequest);
+        Page<EnrollmentResponse> result = enrollmentService.getMyEnrollments(classmate.getName(), pageRequest);
 
         assertThat(result.getContent()).hasSize(5);
         assertThat(result.getTotalElements()).isEqualTo(10);
