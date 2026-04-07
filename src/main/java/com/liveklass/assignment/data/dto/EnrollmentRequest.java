@@ -1,4 +1,4 @@
-package com.liveklass.assignment.dto;
+package com.liveklass.assignment.data.dto;
 
 import lombok.Getter;
 

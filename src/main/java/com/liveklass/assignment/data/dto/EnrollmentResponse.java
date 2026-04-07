@@ -1,4 +1,4 @@
-package com.liveklass.assignment.dto;
+package com.liveklass.assignment.data.dto;
 
 import com.liveklass.assignment.data.EnrollmentStatus;
 import com.liveklass.assignment.data.entity.Enrollment;
