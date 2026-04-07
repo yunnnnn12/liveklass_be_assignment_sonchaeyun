@@ -2,7 +2,7 @@ package com.liveklass.assignment.ServiceTest;
 
 import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.entity.Course;
-import com.liveklass.assignment.repository.CourseRepository;
+import com.liveklass.assignment.data.repository.CourseRepository;
 import com.liveklass.assignment.service.EnrollmentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
