@@ -68,7 +68,7 @@ public class EnrollmentService {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new IllegalArgumentException("신청 내역이 없습니다."));
 
-        // 2. course 락 조회 (핵심 ⭐)
+        // 2. course 락 조회
         Course course = courseRepository.findByIdWithLock(enrollment.getCourse().getId())
                 .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
 
@@ -80,14 +80,14 @@ public class EnrollmentService {
     }
 
     // 3. 내 수강 신청 목록 조회
-    public Page<EnrollmentResponse> getMyEnrollments(Long userId, Pageable pageable) {
-        return enrollmentRepository.findAllByClassmate_Id(userId, pageable)
+    public Page<EnrollmentResponse> getMyEnrollments(String userName, Pageable pageable) {
+        return enrollmentRepository.findAllByClassmateName(userName, pageable)
                 .map(EnrollmentResponse::from);
     }
 
     // 4. 강의별 수강생 목록 조회 (크리에이터용)
     public Page<EnrollmentResponse> getCourseStudents(Long courseId, Pageable pageable) {
-        return enrollmentRepository.findAllByCourse_IdAndEnrollmentStatus(courseId, EnrollmentStatus.CONFIRMED, pageable)
+        return enrollmentRepository.findAllByCourseIdAndEnrollmentStatus(courseId, EnrollmentStatus.CONFIRMED, pageable)
                 .map(EnrollmentResponse::from);
     }
 
