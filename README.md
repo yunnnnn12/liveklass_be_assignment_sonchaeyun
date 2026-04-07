@@ -46,7 +46,7 @@
 
 ### 2. 수강 신청 관련
 - **POST /api/enrollments/enroll**: 수강 신청 (Body: courseId, userName)
-- **GET /api/enrollments/me?userName={name}&page={page}&size={size}**: 내 수강 신청 목록 조회 (Pageable 지원)
+- **GET /api/enrollments/me?userName={userName}&page={page}&size={size}**: 내 수강 신청 목록 조회 (Pageable 지원)
 - **GET /api/enrollments/course/{courseId}/students?page={page}&size={size}**: 특정 강의 수강생 목록 조회 (크리에이터용, 페이징) 
 - **PATCH /api/enrollments/{enrollmentId}/confirm**: 수강 신청 승인
 - **PATCH /api/enrollments/{enrollmentId}/cancel**: 수강 신청 취소 (7일 제한 로직 포함)
