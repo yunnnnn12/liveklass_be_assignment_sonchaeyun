@@ -1,4 +1,4 @@
-package com.liveklass.assignment.repository;
+package com.liveklass.assignment.data.repository;
 
 import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.entity.Course;
