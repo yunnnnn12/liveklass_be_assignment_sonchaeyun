@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     // [수강생] 내 신청 내역 페이징 조회
-    Page<Enrollment> findAllByClassmate_Id(Long classmateId, Pageable pageable);
+    Page<Enrollment> findAllByClassmateName(String userName, Pageable pageable);
 
     // [크리에이터] 특정 강의의 확정된 수강생 목록 페이징 조회
-    Page<Enrollment> findAllByCourse_IdAndEnrollmentStatus(Long courseId, EnrollmentStatus status, Pageable pageable);
+    Page<Enrollment> findAllByCourseIdAndEnrollmentStatus(Long courseId, EnrollmentStatus status, Pageable pageable);
 }
