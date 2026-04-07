@@ -28,8 +28,8 @@
 
 ## 3. 실행 방법
 1. **프로젝트 클론 및 이동** : 
-- 1) git clone https://github.com/yunnnnn12/liveklass_be_assignment_sonchaeyun.git
-- 2) cd liveklass_be_assignment_sonchaeyun
+1) git clone https://github.com/yunnnnn12/liveklass_be_assignment_sonchaeyun.git
+2) cd liveklass_be_assignment_sonchaeyun
 2. **빌드** : ./gradlew clean build
 3. **실행** : ./gradlew bootRun 또는 IDE(IntelliJ 등)에서 Application 실행
 4. **H2 Console** : http://localhost:8080/h2-console (JDBC URL: jdbc:h2:mem:testdb)
