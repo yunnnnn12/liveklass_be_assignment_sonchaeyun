@@ -138,7 +138,7 @@ class EnrollmentServiceTest {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
         Course updatedCourse = courseRepository.findById(course.getId()).orElseThrow();
 
-        assertThat(enrollment.getEnrollmentStatus()).isEqualTo(EnrollmentStatus.CANCELLED);
+        assertThat(enrollment.getEnrollmentStatus()).isEqualTo(EnrollmentStatus.CANCELED);
         assertThat(updatedCourse.getCurrentCount()).isEqualTo(0);
     }
 
