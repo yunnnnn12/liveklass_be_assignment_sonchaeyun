@@ -32,9 +32,9 @@ public class EnrollmentController {
     // 내 목록 조회 (페이징: /me?userId=1&page=0&size=5)
     @GetMapping("/me")
     public ResponseEntity<Page<EnrollmentResponse>> getMyEnrollments(
-            @RequestParam(name = "userId") Long userId,
+            @RequestParam(name = "userName") String userName,
             Pageable pageable) {
-        return ResponseEntity.ok(enrollmentService.getMyEnrollments(userId, pageable));
+        return ResponseEntity.ok(enrollmentService.getMyEnrollments(userName, pageable));
     }
 
     // 특정 강의 수강생 목록 (크리에이터용)
@@ -46,13 +46,13 @@ public class EnrollmentController {
     }
 
     @PatchMapping("/{enrollmentId}/confirm")
-    public ResponseEntity<Void> confirm(@PathVariable Long enrollmentId) {
+    public ResponseEntity<Void> confirm(@PathVariable(name = "enrollmentId") Long enrollmentId) {
         enrollmentService.confirmEnrollment(enrollmentId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{enrollmentId}/cancel")
-    public ResponseEntity<Void> cancel(@PathVariable Long enrollmentId) {
+    public ResponseEntity<Void> cancel(@PathVariable(name = "enrollmentId") Long enrollmentId) {
         enrollmentService.cancelEnrollment(enrollmentId);
         return ResponseEntity.ok().build();
     }
