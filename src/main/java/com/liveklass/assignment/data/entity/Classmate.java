@@ -17,6 +17,7 @@ public class Classmate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     // 한명의 classMate가 여러개의 수강신청을 가진다.
