@@ -27,11 +27,11 @@
 
 ## 4. API 목록 및 예시
 ### 1. 강의 관련
-- POST /api/courses: 강의 등록
-- GET /api/courses: 강의 목록 조회 (status 파라미터로 필터 가능)
-- GET /api/courses/{courseId}: 강의 상세 조회 (courseId로 필터 가능)
-- PATCH /api/courses/{id}/open: 강의 상태 OPEN 변경
-- PATCH /api/courses/{id}/close: 강의 상태 CLOSE 변경
+- **POST /api/courses**: 강의 등록
+- **GET /api/courses**: 강의 목록 조회 (status 파라미터로 필터 가능)
+- **GET /api/courses/{courseId}**: 강의 상세 조회 (courseId로 필터 가능)
+- **PATCH /api/courses/{id}/open**: 강의 상태 OPEN 변경
+- **PATCH /api/courses/{id}/close**: 강의 상태 CLOSE 변경
 
 ### 2. 수강 신청 관련
 - **POST /api/enrollments/enroll**: 수강 신청 (Body: courseId, userName)
