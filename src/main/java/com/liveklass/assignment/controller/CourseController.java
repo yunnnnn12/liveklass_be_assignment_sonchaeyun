@@ -1,8 +1,9 @@
 package com.liveklass.assignment.controller;
 
 import com.liveklass.assignment.data.CourseStatus;
-import com.liveklass.assignment.dto.CourseCreateRequest;
-import com.liveklass.assignment.dto.CourseResponse;
+
+import com.liveklass.assignment.data.dto.CourseCreateRequest;
+import com.liveklass.assignment.data.dto.CourseResponse;
 import com.liveklass.assignment.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
