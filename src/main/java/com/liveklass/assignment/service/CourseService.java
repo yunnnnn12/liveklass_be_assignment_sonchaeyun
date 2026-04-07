@@ -2,9 +2,9 @@ package com.liveklass.assignment.service;
 
 import com.liveklass.assignment.data.CourseStatus;
 import com.liveklass.assignment.data.entity.Course;
-import com.liveklass.assignment.dto.CourseCreateRequest;
-import com.liveklass.assignment.dto.CourseResponse;
-import com.liveklass.assignment.repository.CourseRepository;
+import com.liveklass.assignment.data.dto.CourseCreateRequest;
+import com.liveklass.assignment.data.dto.CourseResponse;
+import com.liveklass.assignment.data.repository.CourseRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,11 @@ public class CourseService {
     // 강의 개설
     @Transactional
     public Long createCourse(CourseCreateRequest dto){
+
+        if (dto.endDate().isBefore(dto.startDate())) {
+            throw new IllegalArgumentException("종료일은 시작일 이후여야 합니다.");
+        }
+
         Course course = Course.builder()
                 .title(dto.title())
                 .description(dto.description())
